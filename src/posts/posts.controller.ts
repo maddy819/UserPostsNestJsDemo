@@ -8,6 +8,8 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { JwtAuthGuard } from '../auth/jwt.guard';
+import { PostDto } from './post.dto';
+import { PostDocument } from './post.schema';
 
 @Controller('posts')
 export class PostsController {
@@ -15,7 +17,7 @@ export class PostsController {
 
   @UseGuards(JwtAuthGuard)
   @PostReq()
-  create(@Req() req, @Body() body: { title: string; content: string }) {
+  create(@Req() req, @Body() body: PostDto): Promise<PostDocument | null> {
     return this.postService.createPost(
       body.title,
       body.content,
@@ -24,7 +26,7 @@ export class PostsController {
   }
 
   @Get()
-  getAll() {
+  getAll(): Promise<PostDocument[]> {
     return this.postService.getAllPosts();
   }
 }
