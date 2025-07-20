@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { UserDto } from 'src/users/user.dto';
+import { UserDocument } from 'src/users/user.schema';
 
 @Injectable()
 export class AuthService {
@@ -66,7 +67,10 @@ export class AuthService {
     }
   }
 
-  async changePassword(userId: string, newPassword: string) {
+  async changePassword(
+    userId: string,
+    newPassword: string,
+  ): Promise<UserDocument | null> {
     try {
       if (!userId) {
         throw new UnauthorizedException('User ID is required');
@@ -87,7 +91,7 @@ export class AuthService {
   }
 
   // src/auth/auth.service.ts
-  async resetPassword(User: UserDto) {
+  async resetPassword(User: UserDto): Promise<UserDocument | null> {
     if (!User.email || !User.password) {
       throw new UnauthorizedException('Email and password are required');
     }
